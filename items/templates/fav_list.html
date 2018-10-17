@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}fav list{% endblock title %}
+
+{% block content %}
+<br>
+<form action="{% url 'fav-list' %}">
+  <div class="input-group mb-3">
+    <input type="text" class="form-control" placeholder="Search" aria-label="Search" name="q" value="{{request.GET.q}}">
+    <div class="input-group-append">
+      <button class="btn btn-outline-secondary" type="submit">Search</button>
+    </div>
+  </div>
+</form>
+<div class="row">
+    {% for item in items %}
+    <div class="col-md-4">
+        <div class="card my-card">
+          {% if item.image %}
+            <img class="card-img-top" src="{{item.image.url}}" alt="Hey Noob, look at me...">
+          {% endif %}
+          <div class="card-body">
+            <h5 class="card-title">{{item.name}}</h5>
+            <p class="card-text">{{item.description|truncatechars:25}}</p>
+          </div>
+          <div class="list-group-item text-center">
+                <a href="{% url 'item-detail' item.id %}" class="btn btn-outline-dark">View</a>
+            
+              
+            
+          </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock content %}

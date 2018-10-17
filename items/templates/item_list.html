@@ -1,9 +1,13 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<form class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="search" placeholder="Search Items" aria-label="Search">
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+<form action="{% url 'item-list' %}">
+  <div class="input-group mb-3">
+    <input type="text" class="form-control" placeholder="Search" aria-label="Search" name="q" value="{{request.GET.q}}">
+    <div class="input-group-append">
+      <button class="btn btn-outline-secondary" type="submit">Search</button>
+    </div>
+  </div>
 </form>
 <div class="row">
 {% for item in items %}
@@ -12,11 +16,48 @@
             <img class="card-img-top" height="55%" src="{{item.image.url}}" alt="Card image cap">
             <div class="card-body bg-light">
                 <h3 class="card-title">{{item.name}}</h3>
+
+                <p class="card-text text-center">
+                    <button class = "btn" onclick="favorite_item({{item.id}})">
+                        <i id="star-{{item.id}}" 
+                        class="fas fa-star fa-spin {% if item.id in faves %}text-warning{% endif %}">    
+                        </i>
+                    </button>
+                </p>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item text-center">
                 <a href="{% url 'item-detail' item.id %}" class="btn btn-outline-dark">More</a>
-            </div>
+            </li>
+        </ul>
         </div>
     </div>
 
 {% endfor %}
 </div>
+
+<script type="text/javascript">
+function favorite_item(item_id) {
+  let button_id = "#star-"+item_id
+    $.ajax(
+        {
+            type:"GET",
+            url:  "/items/"+item_id+"/favorite/",
+            success: function(data){ 
+                if (data.action==="favorite_item"){
+                    $(button_id).addClass('text-warning')
+                }
+                else {
+                    $(button_id).removeClass('text-warning')
+                }
+            },
+
+            error: function() {
+                alert("Something went wrong ")
+                }
+        });
+}
+
+</script>
+
 {% endblock%}
