@@ -13,18 +13,18 @@
   </div>
 </form>
 <div class="row">
-    {% for item in items %}
+    {% for fav in my_fav %}
     <div class="col-md-4">
         <div class="card my-card">
-          {% if item.image %}
-            <img class="card-img-top" src="{{item.image.url}}" alt="Hey Noob, look at me...">
+          {% if fav.image %}
+            <img class="card-img-top" src="{{fav.image.url}}" alt="Hey Noob, look at me...">
           {% endif %}
           <div class="card-body">
-            <h5 class="card-title">{{item.name}}</h5>
-            <p class="card-text">{{item.description|truncatechars:25}}</p>
+            <h5 class="card-title">{{fav.name}}</h5>
+            <p class="card-text">{{fav.description|truncatechars:25}}</p>
           </div>
           <div class="list-group-item text-center">
-                <a href="{% url 'item-detail' item.id %}" class="btn btn-outline-dark">View</a>
+                <a href="{% url 'item-detail' fav.id %}" class="btn btn-outline-dark">View</a>
             
               
             

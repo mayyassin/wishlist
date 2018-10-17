@@ -25,20 +25,24 @@ def item_favorite(request, item_id):
 	return JsonResponse(response, safe=False)
 
 def favorite_items(request):
-	if request.user.is_anonymous:
-		return redirect("user-login")
-	items =[]
 	my_fav = []
+	items= Item.objects.all()
 	query = request.GET.get('q')
 	if query:
-		items = Item.objects.filter(name__contains=query)
-	for fav in FavoriteItem.objects.filter(user=request.user) :
-		my_fav.append(fav.item.id)
-		items.append(fav.item)
+		items=Item.objects.filter(
+			Q(name__icontains=query)|
+			Q(description__icontains=query)
+			).distinct()
+	if not request.user.is_anonymous:
+		fave_items = request.user.favoriteitem_set.all()
+	for item in items:
+		for fav in fave_items:
+			if item.id == fav.item_id:
+				my_fav.append(fav.item)
+	
 
 	context={
-		   "items": items,
-		   "my_fav":my_fav
+		   "my_fav":my_fav,
 		}
 
 	return render(request, 'fav_list.html', context)
@@ -54,13 +58,13 @@ def item_list(request):
 			Q(description__icontains=query)
 			).distinct()
 
-	faves = []
+	my_fav = []
 	for fav in FavoriteItem.objects.filter(user=request.user):
-		faves.append(fav.item.id)
+		my_fav.append(fav.item.id)
 
 	context = {
 			"items": items,
-			"faves": faves,
+			"my_fav": my_fav,
 		}
 	return render(request, 'item_list.html', context)
 

@@ -20,7 +20,7 @@
                 <p class="card-text text-center">
                     <button class = "btn" onclick="favorite_item({{item.id}})">
                         <i id="star-{{item.id}}" 
-                        class="fas fa-star fa-spin {% if item.id in faves %}text-warning{% endif %}">    
+                        class="fas fa-star fa-spin {% if item.id in my_fav %}text-warning{% endif %}">    
                         </i>
                     </button>
                 </p>
